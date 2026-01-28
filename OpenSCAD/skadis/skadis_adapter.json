@@ -3,6 +3,9 @@
     "parameterSets": {
         "New set 1": {
             "hardware": "M2.5"
+        },
+        "New set 2": {
+            "hardware": "M3"
         }
     }
 }
