@@ -21,35 +21,37 @@ module bridge() {
     }
     down(1-tolerance) {
       linear_extrude(1) {
-        square([10, 19], center=true);
+        square([5-tolerance, 20], center=true);
       }
     }
   }
 }
 
-module my_skadis_peg() {
+module my_skadis_peg(hook=true, nub=true) {
   back(2.5) {
-    back(2.5) cube([5-tolerance,10,5], center=true);
-    back(5) down(3.5) cube([5-tolerance, 5,12], center=true);
+    if (nub || hook) {
+      back(2.5) cube([5-tolerance,10,5], center=true);
+    }
+    if (hook) {
+      back(5) down(3.5) cube([5-tolerance, 5,12], center=true);
+    }
   }
 }
 
-module bolt_on_hook(hardware=hardware) {
+module bolt_on_hook(hardware=hardware, hook=true, nub=false) {
   difference() {
     union() {
-      down(0) {
-        my_skadis_peg();
-      }
+      my_skadis_peg(hook, nub);
       fwd(1-tolerance) xrot(90) bridge();
     }
-    union(){
-      rotate([90,0,0]) cylinder(30, tolerance + nut_spec["diameter"]/2, center=true);
-//      back(12.5)
-//        rotate([90,90,0])
-//          nut_trap_inline(4,hardware);
-    }
+    rotate([90,0,0]) cylinder(30, tolerance + nut_spec["diameter"]/2, center=true);
   }
 }
-//my_skadis_peg();
 
-bolt_on_hook(hardware);
+bolt_on_hook(hardware, hook=true);
+down(20) bolt_on_hook(hardware, hook=false);
+
+right(20) {
+bolt_on_hook(hardware, hook=false);
+down(20) bolt_on_hook(hook=true);
+}
