@@ -16,33 +16,40 @@ module bridge() {
           back(4)circle(r=2.5-tolerance/2);
           fwd(4)circle(r=2.5-tolerance/2);
         }
-        square([5, 8], center=true);
+        square([5, 8 + tolerance], center=true);
       }
     }
-    down(2-tolerance) {
-      linear_extrude(2) {
-        square([5-tolerance, 15], center=true);
+    down(1-tolerance) {
+      linear_extrude(1) {
+        square([10, 15], center=true);
       }
     }
+  }
+}
+
+module my_skadis_peg() {
+  back(2.5) {
+    back(2.5) cube([5-tolerance,10,5], center=true);
+    back(5) down(2.5) cube([5-tolerance, 5,10], center=true);
   }
 }
 
 module bolt_on_hook(hardware=hardware) {
   difference() {
     union() {
-//      fwd(7.5 - tolerance) cube(5-tolerance, center=true);
-      down(2.5) {
-        skadis_peg();
+      down(0) {
+        my_skadis_peg();
       }
-      fwd(5) xrot(90) bridge();
+      fwd(1-tolerance) xrot(90) bridge();
     }
     union(){
       rotate([90,0,0]) cylinder(30, tolerance + nut_spec["diameter"]/2, center=true);
-      back(10)
+      back(12.5)
         rotate([90,90,0])
           nut_trap_inline(4,hardware);
     }
   }
 }
+//my_skadis_peg();
 
 bolt_on_hook(hardware);
